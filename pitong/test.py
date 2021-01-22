@@ -18,10 +18,12 @@ import pandas
 import sklearn
 import string
 from sklearn.feature_extraction.text import TfidfVectorizer
+from collections import Counter
+import math
 
 kalimat1 = "Di sekolah kita belajar bahasa inggris dengan rkan dan guru tersayang 123 ! ! @$%"
 kalimat2 = "Belajar bahasa inggris di sekolah dengan teman tercinta"
-
+ 
 def preprocess(kalimat):
 
     # case folding
@@ -58,24 +60,132 @@ def jaccard(s1,s2):
     i = s1.intersection(s2)
     return float(len(i))/(len(s1)+len(s2)-len(i))
 
+def doc_freq(word):
+    c = 0
+    try:
+        c = DF[word]
+    except:
+        pass
+    return c
+
+def gen_vector(tokens,total_vocab):
+    N = 2
+
+    Q = np.zeros((len(total_vocab)))
+    
+    counter = Counter(tokens)
+    words_count = len(tokens)
+
+    query_weights = {}
+    
+    for token in np.unique(tokens):
+        
+        tf = counter[token]/words_count
+        df = doc_freq(token)
+        idf = math.log((N+1)/(df+1))
+
+        try:
+            ind = total_vocab.index(token)
+            Q[ind] = tf*idf
+        except:
+            pass
+    return Q
+
+def cosine_sim2(a, b):
+    cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
+    return cos_sim
+
 def cosine_sim(s1,s2):
-    s1 = set(s1)
-    s2 = set(s2)
-    rvector = s1.union(s2)
     l1 = []
     l2 = []
     c = 0
+
+    # Not TF-IDF
+    s1_a = set(s1)
+    s2_a = set(s2)
+    rvector = s1_a.union(s2_a)
     for w in rvector: 
-        if w in s1: l1.append(1) # create a vector 
+        if w in s1_a: l1.append(1) # create a vector 
         else: l1.append(0) 
-        if w in s2: l2.append(1) 
+        if w in s2_a: l2.append(1) 
         else: l2.append(0) 
 
+    # TF-IDF
+    # rvector = []
+    # rvector.append(s1)
+    # rvector.append(s2)
+    # DF = {}
+    # for i in range(2):
+    #     tokens = rvector[i]
+    #     for w in tokens:
+    #         try:
+    #             DF[w].add(i)
+    #         except:
+    #             DF[w] = {i}
+
+    # for i in DF:
+    #     DF[i] = len(DF[i])
+
+    # total_vocab = [x for x in DF]
+
+    # S1 terhadap dokumen
+    # tf_idf = {}
+    # doc = 0
+    # for i in range(len(rvector)):
+    #     tokens = rvector[i]
+    #     counter = Counter(tokens + s1)
+    #     words_count = len(tokens + s1)
+
+    #     for token in np.unique(tokens):
+    #         tf = counter[token]/words_count
+    #         df = doc_freq(token)
+    #         idf = np.log((2+1)/(df+1))
+
+    #         tf_idf[doc,token] = tf*idf
+    #     doc+=1
+
+    # S2 terhadap dokumen
+    # tf_idf2 = {}
+    # doc2 = 0
+    # for i in range(len(rvector)):
+    #     tokens = rvector[i]
+    #     counter = Counter(tokens + s2)
+    #     words_count = len(tokens + s2)
+
+    # for token in np.unique(tokens):
+    #     tf = counter[token]/words_count
+    #     df = doc_freq(token)
+    #     idf = np.log((2+1)/(df+1))
+
+    #     tf_idf2[doc2,token] = tf*idf
+    # doc2+=1
+    
+    # D = np.zeros((2,len(DF)))
+    # for i in tf_idf:
+        # try:
+        #     ind = total_vocab.index(i[1])
+        #     D[i[0]][ind] = tf_idf[i]
+        # except:
+        #     pass
+    
+    # print(gen_vector(s1,total_vocab))
+    # print(gen_vector(s2,total_vocab))
+    # print(tf_idf)
+    # print(tf_idf2)
+    # print(l1)
+    # print(l2)
+    
+
+
     # cosine formula  
-    # print(len(rvector))
     for i in range(len(rvector)): 
-            c+= l1[i]*l2[i] 
-    cosine = c / float((sum(l1)*sum(l2))**0.5) 
+            c+= l1[i]*l2[i]
+    total = float((sum(l1)*sum(l2))**0.5)
+    if (total > 0):
+        cosine = c / total
+    else:
+        cosine = 0
+
     return cosine 
 
 
@@ -166,3 +276,8 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
 # cosine_new = cosine_sim(kalimat1_new,kalimat2_preprocess)
 # print(cosine_new)
 # print(kalimat1_new)
+
+# k1 = preprocess(kalimat1)
+# k2 = preprocess(kalimat2)
+
+# print(cosine_sim(k1,k2))
