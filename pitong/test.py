@@ -231,11 +231,11 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
             if j in kalimat2_preprocess:
                 change[j] = i
     
-    print(sinonim_k2)
+    # print(sinonim_k2)
     
-    print(change)
+    # print(change)
     kalimat1_new = kalimat1_preprocess
-    print(kalimat1_new)
+    # print(kalimat1_new)
     if change != '':
         for i in change:
             if change[i] in kalimat1_new:
@@ -281,19 +281,19 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
 # print(cosine_new)
 # print(kalimat1_new)
 
-kalimat1 = "Proses perubahan wujud zat padat menjadi gas"
-kalimat2 = "Perubahan bentuk zat padat menjadi gas"
+# kalimat1 = "Proses perubahan wujud zat padat menjadi gas"
+# kalimat2 = "Perubahan bentuk zat padat menjadi gas"
 
-k1 = preprocess(kalimat1)
-k2 = preprocess(kalimat2)
+# k1 = preprocess(kalimat1)
+# k2 = preprocess(kalimat2)
 
-cosine1 = cosine_sim(k1,k2)
-qe = qe(k1,k2)
-cosine2 = cosine_sim(qe,k2)
+# cosine1 = cosine_sim(k1,k2)
+# qe = qe(k1,k2)
+# cosine2 = cosine_sim(qe,k2)
 
-print(k1)
-print(k2)
-print(cosine1)
-print(qe)
-print(cosine2)
+# print(k1)
+# print(k2)
+# print(cosine1)
+# print(qe)
+# print(cosine2)
 # print(spell_check(k1))
