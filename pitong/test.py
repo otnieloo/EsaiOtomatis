@@ -230,13 +230,17 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
         for j in sinonim_k2[i]:
             if j in kalimat2_preprocess:
                 change[j] = i
-        # print(sinonim_k2[i])
-
+    
+    print(sinonim_k2)
+    
+    print(change)
     kalimat1_new = kalimat1_preprocess
+    print(kalimat1_new)
     if change != '':
         for i in change:
-            index = kalimat1_new.index(change[i])
-            kalimat1_new[index] = i
+            if change[i] in kalimat1_new:
+                index = kalimat1_new.index(change[i])
+                kalimat1_new[index] = i
 
     # if kalimat1_new == kalimat1_preprocess:
     #     return 'nc'
@@ -277,8 +281,19 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
 # print(cosine_new)
 # print(kalimat1_new)
 
-# k1 = preprocess(kalimat1)
-# k2 = preprocess(kalimat2)
+kalimat1 = "Proses perubahan wujud zat padat menjadi gas"
+kalimat2 = "Perubahan bentuk zat padat menjadi gas"
 
-# print(cosine_sim(k1,k2))
+k1 = preprocess(kalimat1)
+k2 = preprocess(kalimat2)
+
+cosine1 = cosine_sim(k1,k2)
+qe = qe(k1,k2)
+cosine2 = cosine_sim(qe,k2)
+
+print(k1)
+print(k2)
+print(cosine1)
+print(qe)
+print(cosine2)
 # print(spell_check(k1))
