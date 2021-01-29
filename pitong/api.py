@@ -24,19 +24,33 @@ def main():
     k1_preprocess = t.preprocess(kalimat1)
     k2_preprocess = t.preprocess(kalimat2)
 
+    # k1_spellcheck = t.spell_check(k1_preprocess)
+
     cosine1 = t.cosine_sim(k1_preprocess,k2_preprocess)
 
     qe = t.qe(k1_preprocess,k2_preprocess)
 
     cosine2 = t.cosine_sim(qe,k2_preprocess)
     
+    k1_preprocess = t.preprocess(kalimat1)
+
+    match = []
+
+    for i in qe:
+        if i not in k1_preprocess:
+            match.append(i)
+
+    # print(match)
     result['k1_raw'] = kalimat1
     result['k2_raw'] = kalimat2
     result['k1_preprocess'] = k1_preprocess
     result['k2_preprocess'] = k2_preprocess
+    # result['k1_spellcheck'] = k1_spellcheck
     result['cosine1'] = cosine1
     result['qe'] = qe
     result['cosine2'] = cosine2
+    result['match'] = match
+ 
     result['time_est'] = time.time() - start_time
 
     return json.dumps(result)

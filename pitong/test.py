@@ -60,40 +60,40 @@ def jaccard(s1,s2):
     i = s1.intersection(s2)
     return float(len(i))/(len(s1)+len(s2)-len(i))
 
-def doc_freq(word):
-    c = 0
-    try:
-        c = DF[word]
-    except:
-        pass
-    return c
+# def doc_freq(word):
+#     c = 0
+#     try:
+#         c = DF[word]
+#     except:
+#         pass
+#     return c
 
-def gen_vector(tokens,total_vocab):
-    N = 2
+# def gen_vector(tokens,total_vocab):
+#     N = 2
 
-    Q = np.zeros((len(total_vocab)))
+#     Q = np.zeros((len(total_vocab)))
     
-    counter = Counter(tokens)
-    words_count = len(tokens)
+#     counter = Counter(tokens)
+#     words_count = len(tokens)
 
-    query_weights = {}
+#     query_weights = {}
     
-    for token in np.unique(tokens):
+#     for token in np.unique(tokens):
         
-        tf = counter[token]/words_count
-        df = doc_freq(token)
-        idf = math.log((N+1)/(df+1))
+#         tf = counter[token]/words_count
+#         df = doc_freq(token)
+#         idf = math.log((N+1)/(df+1))
 
-        try:
-            ind = total_vocab.index(token)
-            Q[ind] = tf*idf
-        except:
-            pass
-    return Q
+#         try:
+#             ind = total_vocab.index(token)
+#             Q[ind] = tf*idf
+#         except:
+#             pass
+#     return Q
 
-def cosine_sim2(a, b):
-    cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
-    return cos_sim
+# def cosine_sim2(a, b):
+#     cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
+#     return cos_sim
 
 def cosine_sim(s1,s2):
     l1 = []
@@ -281,3 +281,4 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
 # k2 = preprocess(kalimat2)
 
 # print(cosine_sim(k1,k2))
+# print(spell_check(k1))
