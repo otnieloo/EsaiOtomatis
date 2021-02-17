@@ -17,11 +17,12 @@ import kbbi
 import pandas
 import sklearn
 import string
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.preprocessing import normalize
 from collections import Counter
 import math
 
-kalimat1 = "Di sekolah kita belajar bahasa inggris dengan rkan dan guru tersayang 123 ! ! @$%"
+kalimat1 = "Di sekolah kita belajar bahasa inggris dengan rekan dan guru tersayang 123 ! ! @$%"
 kalimat2 = "Belajar bahasa inggris di sekolah dengan teman tercinta"
  
 def preprocess(kalimat):
@@ -43,6 +44,8 @@ def preprocess(kalimat):
     stopword = factory.create_stop_word_remover()
 
     kalimat = stopword.remove(kalimat)
+    
+    print(kalimat)
     # create stemmer & stemming process
     factory = StemmerFactory()
     stemmer = factory.create_stemmer()
@@ -91,9 +94,9 @@ def jaccard(s1,s2):
 #             pass
 #     return Q
 
-# def cosine_sim2(a, b):
-#     cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
-#     return cos_sim
+def cosine_sim2(a, b):
+    cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
+    return cos_sim
 
 def cosine_sim(s1,s2):
     l1 = []
@@ -174,9 +177,8 @@ def cosine_sim(s1,s2):
     # print(tf_idf2)
     # print(l1)
     # print(l2)
+    # print(type(l2))
     
-
-
     # cosine formula  
     for i in range(len(rvector)): 
             c+= l1[i]*l2[i]
@@ -281,19 +283,50 @@ def qe(kalimat1_preprocess,kalimat2_preprocess):
 # print(cosine_new)
 # print(kalimat1_new)
 
+def tfIdfCosine(k1,k2):
+    k1_pre = ""
+    k2_pre = ""
+
+    for s in k1:
+        k1_pre += s+" "
+    for w in k2:
+        k2_pre += w+" "
+
+    dataset = [k1_pre,k2_pre]
+
+    tfidfVectorizer = TfidfVectorizer()
+    tfIdf = tfidfVectorizer.fit_transform(dataset).toarray()
+
+    print("-- IDF --")
+    print(tfidfVectorizer.get_feature_names())
+    print(tfidfVectorizer.idf_)
+
+
+    a = tfIdf[0]
+    b = tfIdf[1]
+
+    print(a)
+    print(b)
+    cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
+    return cos_sim
+
 # kalimat1 = "Proses perubahan wujud zat padat menjadi gas"
 # kalimat2 = "Perubahan bentuk zat padat menjadi gas"
-
-# k1 = preprocess(kalimat1)
-# k2 = preprocess(kalimat2)
-
-# cosine1 = cosine_sim(k1,k2)
-# qe = qe(k1,k2)
-# cosine2 = cosine_sim(qe,k2)
+kalimat1 = "Agar rel tidak membengkok ketika memuai."
+kalimat2 = "Agar pada saat terjadi pemuaian, rel tidak patah."
+k1 = preprocess(kalimat1)
+k2 = preprocess(kalimat2)
 
 # print(k1)
 # print(k2)
-# print(cosine1)
+
+# print("-- Without QE --")
+# print(tfIdfCosine(k1,k2))
+# print(cosine_sim(k1,k2))
+
+# print("-- After QE --")
+# qe = qe(k1,k2)
+# print(tfIdfCosine(qe,k2))
+# print(cosine_sim(qe,k2))
+
 # print(qe)
-# print(cosine2)
-# print(spell_check(k1))

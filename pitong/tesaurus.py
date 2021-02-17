@@ -34,4 +34,4 @@ def getAntonim(word):
 
 	return []
 
-# print(getSinonim('ringan'))
+# print(getSinonim('rel'))

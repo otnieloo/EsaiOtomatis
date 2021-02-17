@@ -26,11 +26,15 @@ def main():
 
     # k1_spellcheck = t.spell_check(k1_preprocess)
 
-    cosine1 = t.cosine_sim(k1_preprocess,k2_preprocess)
+    cosine1_notf = t.cosine_sim(k1_preprocess,k2_preprocess)
+
+    cosine1 = t.tfIdfCosine(k1_preprocess,k2_preprocess)
 
     qe = t.qe(k1_preprocess,k2_preprocess)
 
-    cosine2 = t.cosine_sim(qe,k2_preprocess)
+    cosine2_notf = t.cosine_sim(qe,k2_preprocess)
+    
+    cosine2 = t.tfIdfCosine(qe,k2_preprocess)
     
     k1_preprocess = t.preprocess(kalimat1)
 
@@ -47,8 +51,11 @@ def main():
     result['k2_preprocess'] = k2_preprocess
     # result['k1_spellcheck'] = k1_spellcheck
     result['cosine1'] = cosine1
-    result['qe'] = qe
     result['cosine2'] = cosine2
+    result['cosine1_notf'] = cosine1_notf
+    result['cosine2_notf'] = cosine2_notf
+    
+    result['qe'] = qe
     result['match'] = match
  
     result['time_est'] = time.time() - start_time
