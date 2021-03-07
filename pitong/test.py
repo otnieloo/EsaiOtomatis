@@ -21,14 +21,29 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.preprocessing import normalize
 from collections import Counter
 import math
+from num2words import num2words
 
-kalimat1 = "Di sekolah kita belajar bahasa inggris dengan rekan dan guru tersayang 123 ! ! @$%"
+kalimat1 = "Di sekolah kita belajar bahasa inggris dengan rekan dan guru tersayang 123 99 ! ! @$%"
 kalimat2 = "Belajar bahasa inggris di sekolah dengan teman tercinta"
  
 def preprocess(kalimat):
 
     # case folding
     kalimat = kalimat.lower()
+
+    # number translation
+    test_kalimat = "122 2 20 3";
+    numbers = [int(s) for s in kalimat.split() if s.isdigit()]
+    # print(numbers)
+    word_numbers = {}
+    for i in numbers:
+        word_numbers[i] = num2words(i,lang='id')
+
+    # print(word_numbers)
+    # print(kalimat)
+    for key,value in word_numbers.items():
+        kalimat = kalimat.replace(str(key),value)
+    # print(kalimat)       
 
     # number removal
     kalimat = re.sub(r"\d+", "", kalimat)
@@ -45,7 +60,7 @@ def preprocess(kalimat):
 
     kalimat = stopword.remove(kalimat)
     
-    print(kalimat)
+    # print(kalimat)
     # create stemmer & stemming process
     factory = StemmerFactory()
     stemmer = factory.create_stemmer()
@@ -297,25 +312,18 @@ def tfIdfCosine(k1,k2):
     tfidfVectorizer = TfidfVectorizer()
     tfIdf = tfidfVectorizer.fit_transform(dataset).toarray()
 
-    print("-- IDF --")
-    print(tfidfVectorizer.get_feature_names())
-    print(tfidfVectorizer.idf_)
-
-
     a = tfIdf[0]
     b = tfIdf[1]
 
-    print(a)
-    print(b)
     cos_sim = np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
     return cos_sim
 
 # kalimat1 = "Proses perubahan wujud zat padat menjadi gas"
 # kalimat2 = "Perubahan bentuk zat padat menjadi gas"
-kalimat1 = "Agar rel tidak membengkok ketika memuai."
-kalimat2 = "Agar pada saat terjadi pemuaian, rel tidak patah."
-k1 = preprocess(kalimat1)
-k2 = preprocess(kalimat2)
+# kalimat1 = "Agar rel tidak membengkok ketika memuai."
+# kalimat2 = "Agar pada saat terjadi pemuaian, rel tidak patah."
+# k1 = preprocess(kalimat1)
+# k2 = preprocess(kalimat2)
 
 # print(k1)
 # print(k2)
